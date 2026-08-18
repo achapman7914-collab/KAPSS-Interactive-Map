@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Restyle header
+      - name: Restyle header and worker cards
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -32,16 +32,23 @@ jobs:
 .brand .sub{margin-top:15px!important;color:#58aaff!important;font-size:clamp(19px,2vw,31px)!important;font-style:italic!important;letter-spacing:.015em!important;text-shadow:0 2px 8px rgba(0,0,0,.75)!important}
 .toolbar{top:190px!important;right:28px!important}
 .side{top:246px!important;max-height:calc(100vh - 315px)!important}
-@media(max-width:850px){.wrap{padding:150px 8px 46px!important}.hero{height:140px!important;padding:10px 12px!important;gap:10px!important}.logo{width:112px!important;height:112px!important;flex-basis:112px!important}.brand h1::before{font-size:15px!important;margin-bottom:4px}.brand h1::after{font-size:28px!important;white-space:normal!important}.brand .sub{display:none!important}.toolbar{top:108px!important;right:8px!important}.side{top:150px!important;max-height:calc(100vh - 195px)!important}}
+.tooltip{min-width:330px!important;max-width:445px!important;padding:16px!important}
+.worker{grid-template-columns:92px 1fr!important;gap:14px!important;padding:13px 0!important;align-items:center!important}
+.worker img,.avatar{width:92px!important;height:92px!important;border-radius:50%!important}
+.worker-name{font-size:17px!important;margin-bottom:3px!important}
+.worker-meta{font-size:14px!important;line-height:1.5!important}
+@media(max-width:850px){.wrap{padding:150px 8px 46px!important}.hero{height:140px!important;padding:10px 12px!important;gap:10px!important}.logo{width:112px!important;height:112px!important;flex-basis:112px!important}.brand h1::before{font-size:15px!important;margin-bottom:4px}.brand h1::after{font-size:28px!important;white-space:normal!important}.brand .sub{display:none!important}.toolbar{top:108px!important;right:8px!important}.side{top:150px!important;max-height:calc(100vh - 195px)!important}.worker{grid-template-columns:76px 1fr!important}.worker img,.avatar{width:76px!important;height:76px!important}}
 '''
           if 'KAPSS dramatic hero refresh' not in s:
               s=s.replace(marker,css+marker)
+          elif '.worker img,.avatar{width:92px!important' not in s:
+              s=s.replace(marker,css.replace('/* KAPSS dramatic hero refresh */','/* KAPSS worker photo enlargement */')+marker)
           p.write_text(s)
           PY
-      - name: Commit updated header
+      - name: Commit updated page
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Restyle KAPSS header to match concept"
+          git diff --cached --quiet || git commit -m "Restyle KAPSS header and enlarge worker photos"
           git push
