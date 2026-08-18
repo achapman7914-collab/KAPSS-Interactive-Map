@@ -1,296 +1,66 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kentucky Association of Police Social Services (KAPSS) Interactive Map</title>
-  <style>
-    :root{
-      --bg:#f7f8fa; --panel:#ffffff; --text:#18212f; --muted:#667085;
-      --line:#cfd5dd; --accent:#315f8c; --accent2:#e7eff7; --county:#edf1f5;
-      --county-hover:#cddbeb; --shadow:0 10px 28px rgba(0,0,0,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
-    .wrap{width:100vw;height:100vh;margin:0;padding:0;position:relative}
-    h1{position:absolute;z-index:5;left:22px;top:16px;margin:0;font-size:22px;background:rgba(255,255,255,.92);padding:8px 12px;border-radius:10px}
-    .sub{position:absolute;z-index:5;left:22px;top:58px;color:var(--muted);background:rgba(255,255,255,.92);padding:6px 10px;border-radius:8px;max-width:620px}
-    .layout{display:block;width:100%;height:100%}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
-    #mapWrap{position:absolute;inset:0;min-height:0;padding:0;border:0;border-radius:0;background:#f7f8fa;display:flex;align-items:center;justify-content:center}
-    svg{width:100vw;height:100vh;display:block}
-    aside.panel{position:absolute;z-index:20;right:18px;top:18px;width:340px;max-height:calc(100vh - 36px);overflow:auto;box-shadow:var(--shadow)}
-    aside.panel.collapsed{display:none}
-    #editorToggle{position:absolute;z-index:25;right:18px;top:18px;background:var(--accent);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer}
-    .credit{display:none}
-    .county{fill:var(--county);stroke:#fff;stroke-width:1.15;cursor:pointer;transition:fill .12s ease}
-    .county:hover,.county.active{fill:var(--county-hover)}
-    .state-outline{fill:none;stroke:#4f5966;stroke-width:2.2;pointer-events:none}
-    .tooltip{position:absolute;display:none;z-index:10;min-width:245px;max-width:330px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);pointer-events:none}
-    .tooltip h3{margin:0 0 8px;font-size:18px}
-    .worker{display:grid;grid-template-columns:54px 1fr;gap:10px;padding:8px 0;border-top:1px solid #e9edf2}
-    .worker:first-of-type{border-top:0}
-    .worker img,.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6eaf0;border:1px solid #d5dbe3}
-    .avatar{display:flex;align-items:center;justify-content:center;font-weight:bold;color:#586474}
-    .worker-name{font-weight:bold}
-    .worker-meta{font-size:13px;color:var(--muted);line-height:1.35}
-    label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}
-    input,select{width:100%;padding:10px 11px;border:1px solid #cbd2da;border-radius:10px;background:#fff;font:inherit}
-    button{border:0;border-radius:10px;padding:10px 12px;font-weight:bold;cursor:pointer}
-    .primary{background:var(--accent);color:white;width:100%;margin-top:12px}
-    .secondary{background:var(--accent2);color:#244866}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .row button{flex:1}
-    .mini{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
-    .status{margin-top:10px;font-size:13px;color:#315f8c;min-height:18px}
-    .county-list{margin-top:14px;border-top:1px solid #e6eaf0;padding-top:12px}
-    .county-list h3{font-size:16px;margin:0 0 8px}
-    .entry{padding:8px 0;border-top:1px solid #edf0f3;display:flex;justify-content:space-between;gap:8px}
-    .entry:first-of-type{border-top:0}
-    .entry small{color:var(--muted)}
-    .remove{background:#f3f4f6;color:#8a2f2f;padding:6px 8px;font-size:12px}
-    .credit{margin-top:14px;font-size:11px;color:#7c8795}
-    @media (max-width:800px){aside.panel{left:10px;right:10px;top:10px;width:auto;max-height:calc(100vh - 20px)}#editorToggle{right:10px;top:10px}.sub{display:none}h1{font-size:20px;left:10px;top:10px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kentucky Association of Police Social Services (KAPSS) Interactive Map</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--text:#18212f;--muted:#667085;--line:#cfd5dd;--accent:#315f8c;--accent2:#e7eff7;--county:#edf1f5;--county-hover:#cddbeb;--shadow:0 10px 28px rgba(0,0,0,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}.wrap{width:100vw;height:100vh;position:relative}h1{position:absolute;z-index:5;left:22px;top:16px;margin:0;font-size:22px;background:rgba(255,255,255,.92);padding:8px 12px;border-radius:10px}.sub{position:absolute;z-index:5;left:22px;top:58px;color:var(--muted);background:rgba(255,255,255,.92);padding:6px 10px;border-radius:8px;max-width:660px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}#mapWrap{position:absolute;inset:0;padding:0;border:0;border-radius:0;background:#f7f8fa;display:flex;align-items:center;justify-content:center}svg{width:100vw;height:100vh;display:block}aside.panel{position:absolute;z-index:20;right:18px;top:18px;width:340px;max-height:calc(100vh - 36px);overflow:auto;box-shadow:var(--shadow)}aside.panel.collapsed{display:none}#editorToggle{position:absolute;z-index:25;right:18px;top:18px;background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer}.county{fill:var(--county);stroke:#fff;stroke-width:1.15;cursor:pointer;transition:fill .12s ease}.county:hover,.county.active{fill:var(--county-hover)}.state-outline{fill:none;stroke:#4f5966;stroke-width:2.2;pointer-events:none}.tooltip{position:absolute;display:none;z-index:10;min-width:245px;max-width:330px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);pointer-events:none}.tooltip h3{margin:0 0 8px;font-size:18px}.worker{display:grid;grid-template-columns:54px 1fr;gap:10px;padding:8px 0;border-top:1px solid #e9edf2}.worker:first-of-type{border-top:0}.worker img,.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6eaf0;border:1px solid #d5dbe3}.avatar{display:flex;align-items:center;justify-content:center;font-weight:bold;color:#586474}.worker-name{font-weight:bold}.worker-meta{font-size:13px;color:var(--muted);line-height:1.4}label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}input,select{width:100%;padding:10px 11px;border:1px solid #cbd2da;border-radius:10px;background:#fff;font:inherit}button{border:0;border-radius:10px;padding:10px 12px;font-weight:bold;cursor:pointer}.primary{background:var(--accent);color:#fff;width:100%;margin-top:12px}.secondary{background:var(--accent2);color:#244866}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row button{flex:1}.mini{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}.status{margin-top:10px;font-size:13px;color:#315f8c;min-height:18px}.county-list{margin-top:14px;border-top:1px solid #e6eaf0;padding-top:12px}.county-list h3{font-size:16px;margin:0 0 8px}.entry{padding:8px 0;border-top:1px solid #edf0f3;display:flex;justify-content:space-between;gap:8px}.entry:first-of-type{border-top:0}.entry small{color:var(--muted)}.remove{background:#f3f4f6;color:#8a2f2f;padding:6px 8px;font-size:12px}@media(max-width:800px){aside.panel{left:10px;right:10px;top:10px;width:auto;max-height:calc(100vh - 20px)}#editorToggle{right:10px;top:10px}.sub{display:none}h1{font-size:20px;left:10px;top:10px}}
+</style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Kentucky Association of Police Social Services (KAPSS)</h1>
-  <div class="sub">Hover over a county to see the social workers assigned there. Use the editor to add photos and staff information.</div>
-
-  <div class="layout">
-    <section class="panel" id="mapWrap">
-      <div id="loading">Loading Kentucky county map…</div>
-      <svg id="map" viewBox="0 0 975 610" aria-label="Interactive map of Kentucky counties"></svg>
-      <div id="tooltip" class="tooltip"></div>
-    </section>
-
-    <button id="editorToggle" type="button">Add / Edit Workers</button><aside class="panel collapsed" id="editorPanel">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0 0 6px;font-size:20px">Add or update a worker</h2><button class="secondary" id="closeEditor" type="button">Close</button></div>
-      <div class="mini">Photos are stored inside the worker-data file when you save it. You can later reload that file into this map.</div>
-
-      <label for="countySelect">County</label>
-      <select id="countySelect"><option>Loading counties…</option></select>
-
-      <label for="workerName">Worker name</label>
-      <input id="workerName" placeholder="e.g., Amanda Chapman">
-
-      <label for="workerTitle">Title / role</label>
-      <input id="workerTitle" placeholder="e.g., Police Social Worker">
-
-      <label for="workerAgency">Agency / department</label>
-      <input id="workerAgency" placeholder="e.g., Jeffersontown Police Department">
-
-      <label for="workerPhone">Phone</label>
-      <input id="workerPhone" type="tel" placeholder="e.g., (502) 555-1234">
-
-      <label for="workerEmail">Email</label>
-      <input id="workerEmail" type="email" placeholder="e.g., name@agency.org">
-
-      <label for="workerPhoto">Photo</label>
-      <input id="workerPhoto" type="file" accept="image/*">
-
-      <button class="primary" id="addBtn" type="button">Add Worker</button>
-
-      <div class="row">
-        <button class="secondary" id="saveBtn" type="button">Save Worker Data</button>
-        <button class="secondary" id="loadBtn" type="button">Load Worker Data</button>
-        <input id="loadFile" type="file" accept=".json,application/json" style="display:none">
-      </div>
-      <div class="status" id="status" aria-live="polite"></div>
-
-      <div class="county-list">
-        <h3>Workers currently entered</h3>
-        <div id="enteredList" class="mini">None yet.</div>
-      </div>
-    </aside>
-  </div>
-
-  <div class="credit">
-    County boundaries are rendered from the U.S. Atlas county topology. This interactive version was created from the user's Kentucky Association of Police Social Services (KAPSS) map concept.
-  </div>
+<h1>Kentucky Association of Police Social Services (KAPSS)</h1>
+<div class="sub">Hover over a county to see the social workers assigned there. Entries now save automatically on this device.</div>
+<section class="panel" id="mapWrap"><div id="loading">Loading Kentucky county map…</div><svg id="map" viewBox="0 0 975 610" aria-label="Interactive map of Kentucky counties"></svg><div id="tooltip" class="tooltip"></div></section>
+<button id="editorToggle" type="button">Add / Edit Workers</button>
+<aside class="panel collapsed" id="editorPanel">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0 0 6px;font-size:20px">Add or update a worker</h2><button class="secondary" id="closeEditor" type="button">Close</button></div>
+<div class="mini"><strong>Auto-save is on.</strong> Entries stay here after you refresh or close the page on this device.</div>
+<label for="countySelect">County</label><select id="countySelect"><option>Loading counties…</option></select>
+<label for="workerName">Worker name</label><input id="workerName" placeholder="e.g., Amanda Chapman">
+<label for="workerTitle">Title / role</label><input id="workerTitle" placeholder="e.g., Police Social Worker">
+<label for="workerAgency">Agency / department</label><input id="workerAgency" placeholder="e.g., Jeffersontown Police Department">
+<label for="workerPhone">Phone</label><input id="workerPhone" type="tel" placeholder="e.g., (502) 555-1234">
+<label for="workerEmail">Email</label><input id="workerEmail" type="email" placeholder="e.g., name@agency.org">
+<label for="workerPhoto">Photo</label><input id="workerPhoto" type="file" accept="image/*">
+<button class="primary" id="addBtn" type="button">Add Worker & Save</button>
+<div class="row"><button class="secondary" id="exportBtn" type="button">Backup Data</button><button class="secondary" id="importBtn" type="button">Restore Backup</button><input id="loadFile" type="file" accept=".json,application/json" style="display:none"></div>
+<div class="status" id="status" aria-live="polite"></div>
+<div class="county-list"><h3>Workers currently entered</h3><div id="enteredList" class="mini">None yet.</div></div>
+</aside>
 </div>
-
 <script type="module">
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm";
 import {feature} from "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/+esm";
 import us from "https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/counties-albers-10m.json/+esm";
-
-const svg = d3.select("#map");
-const tooltip = document.getElementById("tooltip");
-const mapWrap = document.getElementById("mapWrap");
-const select = document.getElementById("countySelect");
-const status = document.getElementById("status");
-const enteredList = document.getElementById("enteredList");
-let workerData = {};
-
-const allCounties = feature(us, us.objects.counties).features;
-const kyCounties = allCounties.filter(d => String(d.id).padStart(5,"0").startsWith("21"));
-const kyState = feature(us, us.objects.states).features.find(d => String(d.id).padStart(2,"0") === "21");
-const countyNames = kyCounties.map(d => d.properties?.name || String(d.id)).sort((a,b)=>a.localeCompare(b));
-
-document.getElementById("loading").remove();
-select.innerHTML = countyNames.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)} County</option>`).join("");
-
-const kyCollection = {type:"FeatureCollection", features: kyCounties};
-const projection = d3.geoIdentity().reflectY(false).fitExtent([[35,105],[940,585]], kyCollection);
-const path = d3.geoPath(projection);
-
-svg.append("g")
-  .selectAll("path")
-  .data(kyCounties)
-  .join("path")
-  .attr("class","county")
-  .attr("d",path)
-  .attr("data-name",d => d.properties?.name || d.id)
-  .on("mousemove", function(event,d){
-    const county = d.properties?.name || String(d.id);
-    showTooltip(event, county);
-  })
-  .on("mouseleave", hideTooltip)
-  .on("click", function(event,d){
-    const county = d.properties?.name || String(d.id);
-    select.value = county;
-    select.dispatchEvent(new Event("change"));
-  });
-
-if (kyState) {
-  svg.append("path").datum(kyState).attr("class","state-outline").attr("d",path);
-}
-
-function initials(name){
-  return name.trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase() || "?";
-}
-
-function showTooltip(event, county){
-  const workers = workerData[county] || [];
-  let body = `<h3>${escapeHtml(county)} County</h3>`;
-  if(!workers.length){
-    body += `<div class="mini">No workers have been added for this county yet.</div>`;
-  } else {
-    body += workers.map(w => `
-      <div class="worker">
-        ${w.photo ? `<img src="${w.photo}" alt="Photo of ${escapeHtml(w.name)}">` : `<div class="avatar">${escapeHtml(initials(w.name))}</div>`}
-        <div>
-          <div class="worker-name">${escapeHtml(w.name)}</div>
-          <div class="worker-meta">
-            ${escapeHtml(w.title || "")}${w.title && w.agency ? "<br>" : ""}${escapeHtml(w.agency || "")}
-            ${w.phone ? `<br>☎ ${escapeHtml(w.phone)}` : ""}
-            ${w.email ? `<br>✉ ${escapeHtml(w.email)}` : ""}
-          </div>
-        </div>
-      </div>`).join("");
-  }
-  tooltip.innerHTML = body;
-  tooltip.style.display = "block";
-
-  const rect = mapWrap.getBoundingClientRect();
-  const tx = event.clientX - rect.left + 14;
-  const ty = event.clientY - rect.top + 14;
-  tooltip.style.left = Math.min(tx, rect.width - 345) + "px";
-  tooltip.style.top = Math.max(8, Math.min(ty, rect.height - tooltip.offsetHeight - 8)) + "px";
-}
-
-function hideTooltip(){ tooltip.style.display = "none"; }
-
-document.getElementById("addBtn").addEventListener("click", async ()=>{
-  const county = select.value;
-  const name = document.getElementById("workerName").value.trim();
-  const title = document.getElementById("workerTitle").value.trim();
-  const agency = document.getElementById("workerAgency").value.trim();
-  const phone = document.getElementById("workerPhone").value.trim();
-  const email = document.getElementById("workerEmail").value.trim();
-  const file = document.getElementById("workerPhoto").files[0];
-
-  if(!county || !name){ status.textContent = "Choose a county and enter the worker's name."; return; }
-
-  let photo = "";
-  if(file) photo = await fileToDataURL(file);
-
-  workerData[county] = workerData[county] || [];
-  workerData[county].push({name,title,agency,phone,email,photo});
-  status.textContent = `${name} added to ${county} County.`;
-  document.getElementById("workerName").value = "";
-  document.getElementById("workerTitle").value = "";
-  document.getElementById("workerAgency").value = "";
-  document.getElementById("workerPhone").value = "";
-  document.getElementById("workerEmail").value = "";
-  document.getElementById("workerPhoto").value = "";
-  updateEnteredList();
-  updateCountyClasses();
-});
-
-function updateEnteredList(){
-  const rows = [];
-  Object.keys(workerData).sort().forEach(county=>{
-    (workerData[county]||[]).forEach((w,i)=>{
-      rows.push(`<div class="entry"><div><strong>${escapeHtml(w.name)}</strong><br><small>${escapeHtml(county)} County${w.agency ? " • "+escapeHtml(w.agency):""}</small></div><button class="remove" data-county="${escapeHtml(county)}" data-index="${i}" type="button">Remove</button></div>`);
-    });
-  });
-  enteredList.innerHTML = rows.length ? rows.join("") : "None yet.";
-  enteredList.querySelectorAll(".remove").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      const c = btn.dataset.county, i = Number(btn.dataset.index);
-      workerData[c].splice(i,1);
-      if(!workerData[c].length) delete workerData[c];
-      updateEnteredList(); updateCountyClasses();
-    });
-  });
-}
-
-function updateCountyClasses(){
-  svg.selectAll(".county").classed("active",d => {
-    const n = d.properties?.name || String(d.id);
-    return !!(workerData[n] && workerData[n].length);
-  });
-}
-
-document.getElementById("saveBtn").addEventListener("click",()=>{
-  const blob = new Blob([JSON.stringify(workerData,null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "KAPSS_Worker_Data.json";
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  status.textContent = "Worker data saved. Keep that JSON file with the map.";
-});
-
-document.getElementById("loadBtn").addEventListener("click",()=>document.getElementById("loadFile").click());
-document.getElementById("loadFile").addEventListener("change",async (e)=>{
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    const parsed = JSON.parse(await f.text());
-    workerData = parsed && typeof parsed === "object" ? parsed : {};
-    status.textContent = "Worker data loaded.";
-    updateEnteredList(); updateCountyClasses();
-  }catch{
-    status.textContent = "That file could not be loaded.";
-  }
-});
-
-function fileToDataURL(file){
-  return new Promise((resolve,reject)=>{
-    const r = new FileReader();
-    r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file);
-  });
-}
-
-function escapeHtml(v){
-  return String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
-
-const editorPanel = document.getElementById("editorPanel");
-const editorToggle = document.getElementById("editorToggle");
-const closeEditor = document.getElementById("closeEditor");
-editorToggle.addEventListener("click", () => {
-  editorPanel.classList.remove("collapsed");
-  editorToggle.style.display = "none";
-});
-closeEditor.addEventListener("click", () => {
-  editorPanel.classList.add("collapsed");
-  editorToggle.style.display = "block";
-});
-
+const STORAGE_KEY="kapssWorkerDataV1";
+const svg=d3.select("#map"),tooltip=document.getElementById("tooltip"),mapWrap=document.getElementById("mapWrap"),select=document.getElementById("countySelect"),status=document.getElementById("status"),enteredList=document.getElementById("enteredList");
+let workerData={};
+function loadLocal(){try{const saved=localStorage.getItem(STORAGE_KEY);workerData=saved?JSON.parse(saved):{};if(!workerData||typeof workerData!=="object")workerData={};}catch{workerData={};}}
+function saveLocal(message="Saved automatically."){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(workerData));status.textContent=message;}catch(err){status.textContent="Could not save in this browser. Try a smaller photo or use Backup Data.";console.error(err);}}
+loadLocal();
+const allCounties=feature(us,us.objects.counties).features;
+const kyCounties=allCounties.filter(d=>String(d.id).padStart(5,"0").startsWith("21"));
+const kyState=feature(us,us.objects.states).features.find(d=>String(d.id).padStart(2,"0")==="21");
+const countyNames=kyCounties.map(d=>d.properties?.name||String(d.id)).sort((a,b)=>a.localeCompare(b));
+document.getElementById("loading").remove();select.innerHTML=countyNames.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)} County</option>`).join("");
+const kyCollection={type:"FeatureCollection",features:kyCounties};const projection=d3.geoIdentity().reflectY(false).fitExtent([[35,105],[940,585]],kyCollection);const path=d3.geoPath(projection);
+svg.append("g").selectAll("path").data(kyCounties).join("path").attr("class","county").attr("d",path).attr("data-name",d=>d.properties?.name||d.id).on("mousemove",function(event,d){showTooltip(event,d.properties?.name||String(d.id));}).on("mouseleave",hideTooltip).on("click",function(event,d){select.value=d.properties?.name||String(d.id);select.dispatchEvent(new Event("change"));});
+if(kyState)svg.append("path").datum(kyState).attr("class","state-outline").attr("d",path);
+function initials(name){return name.trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"?";}
+function showTooltip(event,county){const workers=workerData[county]||[];let body=`<h3>${escapeHtml(county)} County</h3>`;if(!workers.length)body+=`<div class="mini">No workers have been added for this county yet.</div>`;else body+=workers.map(w=>`<div class="worker">${w.photo?`<img src="${w.photo}" alt="Photo of ${escapeHtml(w.name)}">`:`<div class="avatar">${escapeHtml(initials(w.name))}</div>`}<div><div class="worker-name">${escapeHtml(w.name)}</div><div class="worker-meta">${escapeHtml(w.title||"")}${w.title&&w.agency?"<br>":""}${escapeHtml(w.agency||"")}${w.phone?`<br>☎ ${escapeHtml(w.phone)}`:""}${w.email?`<br>✉ ${escapeHtml(w.email)}`:""}</div></div></div>`).join("");tooltip.innerHTML=body;tooltip.style.display="block";const rect=mapWrap.getBoundingClientRect(),tx=event.clientX-rect.left+14,ty=event.clientY-rect.top+14;tooltip.style.left=Math.min(tx,rect.width-345)+"px";tooltip.style.top=Math.max(8,Math.min(ty,rect.height-tooltip.offsetHeight-8))+"px";}
+function hideTooltip(){tooltip.style.display="none";}
+document.getElementById("addBtn").addEventListener("click",async()=>{const county=select.value,name=document.getElementById("workerName").value.trim(),title=document.getElementById("workerTitle").value.trim(),agency=document.getElementById("workerAgency").value.trim(),phone=document.getElementById("workerPhone").value.trim(),email=document.getElementById("workerEmail").value.trim(),file=document.getElementById("workerPhoto").files[0];if(!county||!name){status.textContent="Choose a county and enter the worker's name.";return;}let photo="";if(file)photo=await fileToDataURL(file);workerData[county]=workerData[county]||[];workerData[county].push({name,title,agency,phone,email,photo});saveLocal(`${name} added to ${county} County and saved.`);["workerName","workerTitle","workerAgency","workerPhone","workerEmail","workerPhoto"].forEach(id=>document.getElementById(id).value="");updateEnteredList();updateCountyClasses();});
+function updateEnteredList(){const rows=[];Object.keys(workerData).sort().forEach(county=>(workerData[county]||[]).forEach((w,i)=>rows.push(`<div class="entry"><div><strong>${escapeHtml(w.name)}</strong><br><small>${escapeHtml(county)} County${w.agency?" • "+escapeHtml(w.agency):""}</small></div><button class="remove" data-county="${escapeHtml(county)}" data-index="${i}" type="button">Remove</button></div>`)));enteredList.innerHTML=rows.length?rows.join(""):"None yet.";enteredList.querySelectorAll(".remove").forEach(btn=>btn.addEventListener("click",()=>{const c=btn.dataset.county,i=Number(btn.dataset.index);workerData[c].splice(i,1);if(!workerData[c].length)delete workerData[c];saveLocal("Worker removed and changes saved.");updateEnteredList();updateCountyClasses();}));}
+function updateCountyClasses(){svg.selectAll(".county").classed("active",d=>{const n=d.properties?.name||String(d.id);return!!(workerData[n]&&workerData[n].length);});}
+document.getElementById("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(workerData,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="KAPSS_Worker_Data_Backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);status.textContent="Backup downloaded.";});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("loadFile").click());document.getElementById("loadFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const parsed=JSON.parse(await f.text());workerData=parsed&&typeof parsed==="object"?parsed:{};saveLocal("Backup restored and saved.");updateEnteredList();updateCountyClasses();}catch{status.textContent="That backup file could not be loaded.";}});
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+const editorPanel=document.getElementById("editorPanel"),editorToggle=document.getElementById("editorToggle"),closeEditor=document.getElementById("closeEditor");editorToggle.addEventListener("click",()=>{editorPanel.classList.remove("collapsed");editorToggle.style.display="none";});closeEditor.addEventListener("click",()=>{editorPanel.classList.add("collapsed");editorToggle.style.display="block";});
+updateEnteredList();updateCountyClasses();
 </script>
 </body>
 </html>
