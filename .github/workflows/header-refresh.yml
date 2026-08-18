@@ -1,0 +1,47 @@
+name: Apply enhanced KAPSS header
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/header-refresh.yml'
+permissions:
+  contents: write
+jobs:
+  update-header:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restyle header
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='.wrap{width:100vw;height:100vh;position:relative;padding:126px 18px 54px}'
+          s=s.replace(old,'.wrap{width:100vw;height:100vh;position:relative;padding:246px 18px 54px}')
+          marker='</style>'
+          css=r'''\n/* KAPSS dramatic hero refresh */
+.hero{height:232px!important;padding:20px 42px!important;gap:28px!important;overflow:hidden!important;align-items:center!important;background:linear-gradient(90deg,rgba(2,10,18,.88),rgba(4,20,35,.86) 58%,rgba(2,12,23,.94)),repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 25px,rgba(8,48,88,.13) 25px 50px)!important;border-bottom:1px solid rgba(78,166,255,.45)!important;box-shadow:0 18px 45px rgba(0,0,0,.42)!important}
+.hero:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;background:radial-gradient(circle at 4% 15%,rgba(255,255,255,.7) 0 3px,transparent 4px),radial-gradient(circle at 9% 31%,rgba(255,255,255,.55) 0 3px,transparent 4px),radial-gradient(circle at 14% 12%,rgba(255,255,255,.55) 0 3px,transparent 4px),radial-gradient(circle at 18% 34%,rgba(255,255,255,.45) 0 3px,transparent 4px),linear-gradient(165deg,rgba(255,255,255,.06),transparent 32%),repeating-linear-gradient(0deg,transparent 0 28px,rgba(255,255,255,.055) 28px 51px)}
+.hero:after{right:-2%!important;top:0!important;width:38%!important;height:100%!important;opacity:.22!important;background:radial-gradient(ellipse at center,rgba(43,117,183,.22),transparent 62%),linear-gradient(135deg,transparent 0 45%,rgba(43,131,214,.14) 46% 48%,transparent 49%)!important}
+.logo{width:202px!important;height:202px!important;flex:0 0 202px!important;filter:drop-shadow(0 6px 18px rgba(0,0,0,.65)) drop-shadow(0 0 16px rgba(18,132,255,.22))!important}
+.brand{align-self:center!important;max-width:900px!important}
+.brand h1{font-family:'Arial Narrow','Roboto Condensed','Franklin Gothic Condensed',Impact,sans-serif!important;font-weight:900!important;line-height:.92!important;letter-spacing:.025em!important;text-shadow:0 4px 4px rgba(0,0,0,.8),0 0 20px rgba(0,0,0,.45)!important;font-size:0!important}
+.brand h1::before{content:'KENTUCKY ASSOCIATION OF';display:block;font-size:clamp(25px,2.6vw,42px);line-height:1;margin-bottom:8px;letter-spacing:.055em;color:#fff}
+.brand h1::after{content:'POLICE SOCIAL SERVICES';display:block;font-size:clamp(46px,5.3vw,82px);line-height:.9;letter-spacing:.018em;color:#fff;white-space:nowrap}
+.brand .sub{margin-top:15px!important;color:#58aaff!important;font-size:clamp(19px,2vw,31px)!important;font-style:italic!important;letter-spacing:.015em!important;text-shadow:0 2px 8px rgba(0,0,0,.75)!important}
+.toolbar{top:190px!important;right:28px!important}
+.side{top:246px!important;max-height:calc(100vh - 315px)!important}
+@media(max-width:850px){.wrap{padding:150px 8px 46px!important}.hero{height:140px!important;padding:10px 12px!important;gap:10px!important}.logo{width:112px!important;height:112px!important;flex-basis:112px!important}.brand h1::before{font-size:15px!important;margin-bottom:4px}.brand h1::after{font-size:28px!important;white-space:normal!important}.brand .sub{display:none!important}.toolbar{top:108px!important;right:8px!important}.side{top:150px!important;max-height:calc(100vh - 195px)!important}}
+'''
+          if 'KAPSS dramatic hero refresh' not in s:
+              s=s.replace(marker,css+marker)
+          p.write_text(s)
+          PY
+      - name: Commit updated header
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Restyle KAPSS header to match concept"
+          git push
