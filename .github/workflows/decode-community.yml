@@ -1,4 +1,4 @@
-name: Decode community artwork
+name: Repair community artwork data
 
 on:
   push:
@@ -9,22 +9,22 @@ permissions:
   contents: write
 
 jobs:
-  decode:
+  repair:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Decode exact approved community image
+      - name: Rebuild browser image data from working JPEG
         run: |
-          base64 -d foundation-preview/assets/community-approved-exact.b64.txt > foundation-preview/assets/community-approved.jpg
-      - name: Commit decoded image
+          base64 -w 0 foundation-preview/assets/community-approved.jpg > foundation-preview/assets/community-approved-exact.b64.txt
+      - name: Commit repaired image data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add foundation-preview/assets/community-approved.jpg
+          git add foundation-preview/assets/community-approved-exact.b64.txt
           if git diff --cached --quiet; then
-            echo "No image change needed"
+            echo "No image data repair needed"
           else
-            git commit -m "Install exact approved community section image"
+            git commit -m "Repair community section image data"
             git push
           fi
