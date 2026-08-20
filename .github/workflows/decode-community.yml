@@ -14,9 +14,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Decode approved community image
+      - name: Decode exact approved community image
         run: |
-          base64 -d foundation-preview/assets/community-approved-cropped.jpg.b64 > foundation-preview/assets/community-approved.jpg
+          base64 -d foundation-preview/assets/community-approved-exact.b64.txt > foundation-preview/assets/community-approved.jpg
       - name: Commit decoded image
         run: |
           git config user.name "github-actions[bot]"
@@ -25,6 +25,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No image change needed"
           else
-            git commit -m "Fix approved community artwork image"
+            git commit -m "Install exact approved community section image"
             git push
           fi
