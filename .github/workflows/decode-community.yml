@@ -3,6 +3,8 @@ name: Repair community artwork data
 on:
   push:
     branches: [main]
+    paths:
+      - 'foundation-preview/assets/community-approved-exact.b64.txt'
   workflow_dispatch:
 
 permissions:
@@ -14,17 +16,17 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Rebuild browser image data from working JPEG
+      - name: Decode approved artwork into website JPEG
         run: |
-          base64 -w 0 foundation-preview/assets/community-approved.jpg > foundation-preview/assets/community-approved-exact.b64.txt
-      - name: Commit repaired image data
+          base64 --decode foundation-preview/assets/community-approved-exact.b64.txt > foundation-preview/assets/community-approved.jpg
+      - name: Commit repaired community image
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add foundation-preview/assets/community-approved-exact.b64.txt
+          git add foundation-preview/assets/community-approved.jpg
           if git diff --cached --quiet; then
-            echo "No image data repair needed"
+            echo "Community image already matches approved artwork"
           else
-            git commit -m "Repair community section image data"
+            git commit -m "Restore clean approved community artwork"
             git push
           fi
