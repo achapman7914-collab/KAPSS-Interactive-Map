@@ -1,1 +1,1 @@
-binary replacement staged via git blob next
+Stage community image fix note
