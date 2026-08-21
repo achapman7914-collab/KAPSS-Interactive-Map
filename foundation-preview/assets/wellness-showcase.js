@@ -2,11 +2,11 @@
 const section=document.querySelector('.wellness');if(!section)return;
 const features=[
  {file:'PXL_20260819_172253412.jpg',title:'Confidential Mental Health Therapy',text:'Officers and retirees have access to confidential mental health therapy with a specialized clinician who understands the unique experiences, stressors and demands of a career in law enforcement — provided at no cost to them.'},
- {file:'PXL_20260819_173132822.MP.jpg',title:'Decompression & Wellness Library Room',text:'A dedicated space where officers can decompress, recharge and reset, with access to wellness resources that support mental, emotional and physical well-being.'},
+ {file:'PXL_20260819_173141781.jpg',title:'Decompression & Wellness Library Room',text:'A dedicated space where officers can decompress, recharge and reset, with access to wellness resources that support mental, emotional and physical well-being.'},
  {file:'Gym with sauna.jpg',title:'Fitness & Recovery — Gym & Sauna',text:'On-site fitness and recovery resources support physical health, stress management and long-term wellness throughout an officer’s career.'},
  {file:'PXL_20260819_173309052.jpg',title:'Cold Plunge & Recovery',text:'An additional recovery resource available to support physical wellness, recovery and stress management.'}
 ];
-const cards=features.map((x,i)=>`<article class="well-card"><div class="well-photo"><img src="assets/${encodeURI(x.file)}?v=20260821-mainflow" alt="${x.title}" loading="lazy"></div><div class="well-copy"><span>0${i+1}</span><h3>${x.title}</h3><p>${x.text}</p></div></article>`).join('');
+const cards=features.map((x,i)=>`<article class="well-card"><div class="well-photo"><img src="assets/${encodeURI(x.file)}?v=20260821-mainflow2" alt="${x.title}" loading="lazy"></div><div class="well-copy"><span>0${i+1}</span><h3>${x.title}</h3><p>${x.text}</p></div></article>`).join('');
 section.classList.add('wellness-mainflow');
 section.innerHTML=`<div class="wrap wellness-page-block">
 <div class="wellness-kicker">Officer Wellness</div><h2 class="section-title">Supporting the People Behind the Badge.</h2><p class="wellness-intro-copy">The <strong>Jeffersontown Police Foundation seeks to support the wellness program at the Jeffersontown Police Department</strong> by helping provide resources and opportunities that promote the mental, emotional and physical well-being of the men and women who serve our community.</p>
