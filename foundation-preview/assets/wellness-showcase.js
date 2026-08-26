@@ -19,6 +19,15 @@ const leadershipLink=document.querySelector('nav a[href="#leadership"]');if(lead
 const wellnessLink=document.querySelector('nav a[href="#wellness"]');if(wellnessLink)wellnessLink.setAttribute('href','wellness.html');
 // The full DFR Initiative lives on its own standalone page.
 const dfrLink=document.querySelector('nav a[href="#dfr"]');if(dfrLink)dfrLink.setAttribute('href','dfr.html');
+// Add Upcoming Events to the primary navigation.
+const nav=document.querySelector('nav');
+if(nav&&!nav.querySelector('a[href="events.html"]')){
+  const eventsLink=document.createElement('a');
+  eventsLink.href='events.html';
+  eventsLink.textContent='Upcoming Events';
+  const leadershipNav=nav.querySelector('a[href="leadership.html"]');
+  if(leadershipNav)nav.insertBefore(eventsLink,leadershipNav);else{const donateNav=nav.querySelector('.donate-link');donateNav?nav.insertBefore(eventsLink,donateNav):nav.appendChild(eventsLink);}
+}
 const style=document.createElement('style');style.textContent=`
 .brand-row{min-height:164px!important}.brand{gap:28px!important}.brand img{width:154px!important;height:154px!important;object-fit:cover!important;clip-path:circle(45% at 50% 50%);transform:scale(1.08);background:transparent!important}.brand-copy strong{font-size:clamp(34px,3.2vw,50px)!important}.donate-layout{grid-template-columns:250px 1fr!important;gap:54px!important;align-items:center!important}.donate-logo{width:235px!important;height:235px!important;object-fit:cover!important;clip-path:circle(45% at 50% 50%);transform:scale(1.08);background:transparent!important}.footer{padding:44px 0!important}.footer-inner{gap:30px!important}.footer-logo{width:132px!important;height:132px!important;object-fit:cover!important;clip-path:circle(45% at 50% 50%);transform:scale(1.08);background:transparent!important}
 .mission-showcase{background:#f7f5ef!important;color:#071a30!important;padding:38px 0!important}.mission-layout{width:min(1180px,calc(100% - 52px));margin:auto;grid-template-columns:48% 52%!important;min-height:0!important;align-items:center;gap:46px}.mission-photo{min-height:0!important;height:285px!important;border-radius:8px;background-position:center!important;box-shadow:0 12px 32px rgba(7,26,48,.10)}.mission-content{padding:24px 0!important;display:block!important}.mission-content:before{content:'The Jeffersontown Police Foundation';display:block;font:800 clamp(28px,3vw,40px)/1.08 'Roboto Slab',Georgia,serif;color:#071a30;margin-bottom:20px}.mission-content:after{content:'';display:block;width:150px;height:3px;background:#c8a45a;margin-top:24px}.foundation-statement{font-family:Inter,Arial,sans-serif!important;font-size:16px!important;font-weight:500!important;line-height:1.65!important;color:#40566b!important;margin:0!important}
