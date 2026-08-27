@@ -1,0 +1,56 @@
+name: Equalize Homepage Program Focus
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/equalize-homepage-focus.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  equalize-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove special wellness feature and restore equal program treatment
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('foundation-preview/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          # Remove the standalone featured wellness section.
+          text = re.sub(r'<section class="wellness-feature" id="wellness">.*?</section><section class="what-support"', '<section class="what-support"', text, count=1, flags=re.S)
+
+          # Replace the support section copy and cards so Wellness is equal with other program areas.
+          old = '''<section class="what-support" id="support"><div class="wrap"><div class="support-head"><div class="support-kicker">Additional Areas of Support</div><h2>Supporting People and Community.</h2><p>Beyond our primary wellness focus, the Foundation supports programs that help JPD employees, families, victims and vulnerable members of the Jeffersontown community.</p></div><div class="support-grid"><a class="support-card reach-card" href="reach.html"><div class="tag">Community Support</div><h3>REACH</h3><p>Helping connect victims, individuals and families with advocacy, recovery resources, mental-health support and practical community services.</p><span class="learn">Explore REACH →</span></a><a class="support-card" href="officer-in-distress.html"><div class="tag">Officer &amp; Family Support</div><h3>Officer in Distress</h3><p>Building a compassionate source of assistance for members of the JPD family facing serious illness, injury, loss or extraordinary hardship.</p><span class="learn">Explore Officer in Distress →</span></a></div><div class="support-cta">Every contribution helps us invest where it matters most.<a href="donate.html">See Ways to Give →</a></div></div></section>'''
+
+          new = '''<section class="what-support" id="support"><div class="wrap"><div class="support-head"><div class="support-kicker">What We Support</div><h2>Supporting the Department and Community.</h2><p>The Foundation supports a balanced range of programs and needs that advance the Board-approved mission and strategic pillars. Each area plays an important role in strengthening public safety, officer readiness, wellness and community connection.</p></div><div class="support-grid"><a class="support-card" style="background:linear-gradient(180deg,rgba(4,24,45,.12),rgba(4,24,45,.95)),url('assets/wellness-hero.jpg') center/cover,#0b3153" href="wellness.html"><div class="tag">Department Wellness</div><h3>Officer Wellness</h3><p>Supporting officers’ physical, mental and emotional well-being through programs and resources that promote resilience and sustained performance.</p><span class="learn">Explore Officer Wellness →</span></a><a class="support-card reach-card" href="reach.html"><div class="tag">Community Engagement</div><h3>REACH</h3><p>Helping connect victims, individuals and families with advocacy, recovery resources, mental-health support and practical community services.</p><span class="learn">Explore REACH →</span></a><a class="support-card" href="officer-in-distress.html"><div class="tag">Officer &amp; Family Support</div><h3>Officer in Distress</h3><p>Building a compassionate source of assistance for members of the JPD family facing serious illness, injury, loss or extraordinary hardship.</p><span class="learn">Explore Officer in Distress →</span></a></div><div class="support-cta">Every contribution helps advance the Foundation’s mission.<a href="donate.html">See Ways to Give →</a></div></div></section>'''
+
+          if old not in text:
+              raise SystemExit('Expected support section not found; refusing partial edit.')
+          text = text.replace(old, new, 1)
+
+          # Remove primary-focus language anywhere it remains.
+          text = text.replace('A Key Foundation Priority', 'Department Wellness')
+          text = text.replace('Beyond our primary wellness focus, ', '')
+          text = text.replace('Your support helps us prioritize officer wellness, strengthen community programs and advance carefully selected public-safety initiatives.', 'Your support helps advance the Foundation’s mission across community engagement, training and equipment, department wellness and innovative community policing.')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit homepage update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/index.html
+          if git diff --cached --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git commit -m 'Restore equal homepage focus across Foundation programs'
+          git push
