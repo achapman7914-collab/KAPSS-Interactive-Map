@@ -1,0 +1,68 @@
+name: Restore Board Mission Content
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-board-mission.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore-board-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore board-approved homepage messaging
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('foundation-preview/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          # Restore the overall Foundation emphasis in the hero.
+          text = text.replace(
+              "Private support helps us put officer wellness first while also strengthening public safety through community programs, critical resources, training, equipment and responsible innovation for the Jeffersontown Police Department.",
+              "The Jeffersontown Police Foundation strengthens public safety by raising private support for essential resources, advanced equipment, officer wellness, community engagement and innovative programs that extend beyond public funding."
+          )
+          text = text.replace('href="#wellness">Explore Officer Wellness</a>', 'href="#about">About the Foundation</a>')
+
+          # Add About / Mission / Vision directly after the hero.
+          about = '''<section class="board-foundation" id="about"><div class="wrap"><div class="board-intro"><div class="support-kicker">About the Foundation</div><h2>Supporting Public Safety. Strengthening Community.</h2><p>The Jeffersontown Police Foundation is an independent 501(c)(3) nonprofit organization devoted to bolstering public safety in Jeffersontown. As the entity authorized to raise private funds for the Jeffersontown Police Department, the Foundation supplies essential resources, advanced equipment and innovative programs not covered by public funding.</p></div><div class="mv-grid"><article class="mv-card"><div class="section-kicker">Our Mission</div><h3>Enhance Readiness, Service and Connection.</h3><p>To enhance the efficiency, preparedness and outreach of the Jeffersontown Police Department, ensuring the community remains among the safest, most connected and welcoming places for everyone—residents, workers and visitors alike.</p></article><article class="mv-card"><div class="section-kicker">Our Vision</div><h3>Innovation Built on Trust.</h3><p>The Foundation envisions a future where public safety is driven by innovation, built on trust and strengthened through community collaboration, positioning Jeffersontown as a model of proactive, community-focused policing.</p></article></div><div class="board-ethos"><p>The Board is comprised of diverse professionals united by a shared commitment to supporting the Jeffersontown Police Department and nurturing the relationship between law enforcement and the community. Their ethos reflects respect, service and unity, reinforcing the idea that <strong>“In J-Town, we are more than just a town—we’re family.”</strong></p></div></div></section>'''
+
+          if 'class="board-foundation"' not in text:
+              text = text.replace('</section><section class="mission-forward">', '</section>' + about + '<section class="mission-forward">', 1)
+
+          # Restore the four board-approved strategic pillars and their order.
+          pattern = re.compile(r'<section class="mission-forward"><div class="wrap">.*?</section><section class="wellness-feature"', re.S)
+          replacement = '''<section class="mission-forward"><div class="wrap"><div class="mission-label">The Four Strategic Pillars</div><h2>Guiding the Foundation Forward.</h2><p class="mission-intro">Four strategic pillars guide the Foundation’s work and help ensure private support advances the priorities established for the Jeffersontown Police Department and the community it serves.</p><div class="pillar-grid"><article class="pillar"><h3>Community Engagement</h3><p>Cultivating trust, dialogue and collaboration by funding outreach programs, events and initiatives that build meaningful relationships between officers and residents.</p></article><article class="pillar"><h3>Training &amp; Equipment</h3><p>Investing in advanced training and state-of-the-art equipment to keep officers well prepared, skilled and ready to meet evolving community needs.</p></article><article class="pillar"><h3>Department Wellness</h3><p>Supporting officers’ physical, mental and emotional well-being through wellness programs that promote resilience and sustained performance.</p></article><article class="pillar"><h3>Innovative Community Policing</h3><p>Creating safer, more connected neighborhoods by funding forward-thinking methods of community policing that emphasize partnerships, creative problem-solving and proactive strategies.</p></article></div></div></section><section class="wellness-feature"'''
+          text = pattern.sub(replacement, text, count=1)
+
+          # Wellness remains prominent, but as one strategic priority rather than the Foundation's sole identity.
+          text = text.replace('<div class="section-kicker">Our Primary Focus</div>', '<div class="section-kicker">A Key Foundation Priority</div>')
+          text = text.replace("Officer wellness is at the heart of the Jeffersontown Police Foundation's mission.", "Department wellness is one of the Foundation’s four strategic pillars.")
+          text = text.replace("These current technology projects support public-safety capability while remaining clearly secondary to the Foundation's ongoing commitment to officer wellness.", "These current projects demonstrate how private support can help close resource gaps and advance responsible, forward-thinking public-safety strategies.")
+          text = text.replace("Your support helps us prioritize officer wellness, strengthen community programs and advance carefully selected public-safety initiatives.", "Your support helps bridge resource gaps, strengthen officer training and wellness, foster trust and collaboration, and advance innovative, proactive public-safety strategies in Jeffersontown.")
+
+          # Supporting styles for the restored About / Mission / Vision area.
+          style = '''.board-foundation{padding:84px 0;background:var(--cream)}.board-intro{text-align:center;max-width:980px;margin:0 auto 38px}.board-intro h2{font:800 clamp(42px,5vw,66px)/1 'Roboto Slab',Georgia,serif;color:var(--navy);margin:13px 0 18px}.board-intro p,.board-ethos p{font-size:17px;line-height:1.78;color:#4b6073}.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1080px;margin:0 auto}.mv-card{background:#fff;padding:36px;border-top:5px solid var(--gold);box-shadow:0 16px 36px rgba(7,26,48,.08)}.mv-card h3{font:800 30px/1.1 'Roboto Slab',Georgia,serif;color:var(--navy);margin:10px 0 14px}.mv-card p{font-size:16px;line-height:1.72;color:#52687a}.board-ethos{max-width:980px;margin:30px auto 0;text-align:center;border-top:1px solid #d8d0c0;padding-top:28px}@media(max-width:900px){.mv-grid{grid-template-columns:1fr}}'''
+          if '.board-foundation{' not in text:
+              text = text.replace('</style>', style + '</style>')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit homepage changes
+        run: |
+          if git diff --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/index.html
+          git commit -m 'Restore board-approved mission vision and strategic pillars'
+          git push
