@@ -1,0 +1,64 @@
+name: Equalize homepage support programs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/equalize-homepage-support.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make homepage support areas equal
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('foundation-preview/index.html')
+          text = path.read_text(encoding='utf-8')
+          original = text
+
+          # Remove the oversized standalone wellness feature.
+          text = re.sub(
+              r'<section class="wellness-feature" id="wellness">.*?</section><section class="what-support" id="support">',
+              '<section class="what-support" id="support">',
+              text,
+              count=1,
+              flags=re.S,
+          )
+
+          # Rebuild What We Support so Wellness, REACH, and Officer in Distress are equal cards.
+          replacement = '''<section class="what-support" id="support"><div class="wrap"><div class="support-head"><div class="support-kicker">What We Support</div><h2>Programs That Strengthen Public Safety and Community.</h2><p>The Foundation supports programs and resources that advance the Board-approved strategic pillars and help the Jeffersontown Police Department serve the community effectively.</p></div><div class="support-grid"><a class="support-card" href="wellness.html"><div class="tag">Department Wellness</div><h3>Officer Wellness</h3><p>Supporting officers’ physical, mental and emotional well-being through programs and resources that promote resilience, healthy careers and sustained performance.</p><span class="learn">Explore Officer Wellness →</span></a><a class="support-card reach-card" href="reach.html"><div class="tag">Community Engagement</div><h3>REACH</h3><p>Helping connect victims, individuals and families with advocacy, recovery resources, mental-health support and practical community services.</p><span class="learn">Explore REACH →</span></a><a class="support-card" href="officer-in-distress.html"><div class="tag">Officer &amp; Family Support</div><h3>Officer in Distress</h3><p>Building a compassionate source of assistance for members of the JPD family facing serious illness, injury, loss or extraordinary hardship.</p><span class="learn">Explore Officer in Distress →</span></a></div><div class="support-cta">Every contribution helps strengthen the mission.<a href="donate.html">See Ways to Give →</a></div></div></section><section class="initiatives">'''
+
+          text = re.sub(
+              r'<section class="what-support" id="support">.*?</section><section class="initiatives">',
+              replacement,
+              text,
+              count=1,
+              flags=re.S,
+          )
+
+          # Make the three support cards equal-width on desktop while preserving mobile stacking.
+          css = '.support-grid{grid-template-columns:repeat(3,1fr)}@media(max-width:900px){.support-grid{grid-template-columns:1fr}}'
+          text = text.replace('</style>', css + '</style>', 1)
+
+          if text == original:
+              raise SystemExit('No homepage changes were made; expected patterns were not found.')
+
+          path.write_text(text, encoding='utf-8')
+          print('Homepage updated successfully.')
+          PY
+      - name: Commit homepage changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/index.html
+          git commit -m 'Make homepage support programs equal'
+          git push
