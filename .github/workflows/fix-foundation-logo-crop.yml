@@ -1,0 +1,51 @@
+name: Fix Foundation logo crop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-foundation-logo-crop.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-logo-crop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Foundation logo image fitting
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          for path in Path('foundation-preview').glob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              original = text
+
+              replacements = {
+                  '.brand img{width:100px;height:100px;object-fit:cover;border-radius:50%}': '.brand img{width:100px;height:100px;object-fit:contain;border-radius:0}',
+                  '.brand img{width:84px;height:84px;border-radius:50%;object-fit:cover}': '.brand img{width:84px;height:84px;border-radius:0;object-fit:contain}',
+                  '.donate-logo{width:200px;height:200px;border-radius:50%;object-fit:cover}': '.donate-logo{width:200px;height:200px;border-radius:0;object-fit:contain}',
+                  '.footer-logo{width:78px;height:78px;border-radius:50%;object-fit:cover}': '.footer-logo{width:78px;height:78px;border-radius:0;object-fit:contain}'
+              }
+
+              for old, new in replacements.items():
+                  text = text.replace(old, new)
+
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  print(f'Updated {path}')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/*.html
+          git commit -m 'Fix Foundation logo crop'
+          git push
