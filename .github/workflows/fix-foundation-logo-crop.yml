@@ -14,25 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update Foundation logo image fitting
+      - name: Normalize Foundation logo image fitting across interior pages
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
+
+          selectors = [r'\.brand img', r'\.footer-logo', r'\.donate-logo', r'\.logo']
 
           for path in Path('foundation-preview').glob('*.html'):
               text = path.read_text(encoding='utf-8')
               original = text
 
-              replacements = {
-                  '.brand img{width:100px;height:100px;object-fit:cover;border-radius:50%}': '.brand img{width:100px;height:100px;object-fit:contain;border-radius:0}',
-                  '.brand img{width:84px;height:84px;border-radius:50%;object-fit:cover}': '.brand img{width:84px;height:84px;border-radius:0;object-fit:contain}',
-                  '.donate-logo{width:200px;height:200px;border-radius:50%;object-fit:cover}': '.donate-logo{width:200px;height:200px;border-radius:0;object-fit:contain}',
-                  '.footer-logo{width:78px;height:78px;border-radius:50%;object-fit:cover}': '.footer-logo{width:78px;height:78px;border-radius:0;object-fit:contain}'
-              }
+              for selector in selectors:
+                  pattern = rf'({selector}\s*\{{)([^}}]*)(\}})'
 
-              for old, new in replacements.items():
-                  text = text.replace(old, new)
+                  def fix_rule(match):
+                      body = match.group(2)
+                      body = re.sub(r'border-radius\s*:\s*50%', 'border-radius:0', body)
+                      body = re.sub(r'object-fit\s*:\s*cover', 'object-fit:contain', body)
+                      return match.group(1) + body + match.group(3)
+
+                  text = re.sub(pattern, fix_rule, text)
 
               if text != original:
                   path.write_text(text, encoding='utf-8')
@@ -47,5 +51,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add foundation-preview/*.html
-          git commit -m 'Fix Foundation logo crop'
+          git commit -m 'Normalize Foundation logo display on interior pages'
           git push
