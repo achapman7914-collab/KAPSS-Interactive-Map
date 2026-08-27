@@ -1,0 +1,50 @@
+name: Equalize Homepage Program Focus V3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/equalize-homepage-focus-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  equalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply equal-focus homepage update
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('foundation-preview/index.html')
+          t=p.read_text(encoding='utf-8')
+
+          # Hide/remove visual prominence of the standalone Wellness feature.
+          t=t.replace('.wellness-feature{padding:88px 0;background:#fff}', '.wellness-feature{display:none!important}')
+
+          # Make support-section language neutral/equal.
+          t=t.replace('<div class="support-kicker">Additional Areas of Support</div><h2>Supporting People and Community.</h2><p>Beyond our primary wellness focus, the Foundation supports programs that help JPD employees, families, victims and vulnerable members of the Jeffersontown community.</p>', '<div class="support-kicker">What We Support</div><h2>Supporting the Department and Community.</h2><p>The Foundation supports a balanced range of programs and needs that advance the Board-approved mission and strategic pillars. Each area plays an important role in strengthening public safety, officer readiness, wellness and community connection.</p>')
+
+          # Add Wellness as an equal card if it is not already present in this grid.
+          marker='<div class="support-grid"><a class="support-card reach-card" href="reach.html">'
+          wellness='''<div class="support-grid"><a class="support-card" style="background:linear-gradient(180deg,rgba(4,24,45,.12),rgba(4,24,45,.95)),url('assets/wellness-hero.jpg') center/cover,#0b3153" href="wellness.html"><div class="tag">Department Wellness</div><h3>Officer Wellness</h3><p>Supporting officers’ physical, mental and emotional well-being through programs and resources that promote resilience and sustained performance.</p><span class="learn">Explore Officer Wellness →</span></a><a class="support-card reach-card" href="reach.html">'''
+          if marker in t and 'Department Wellness</div><h3>Officer Wellness</h3>' not in t.split('<section class="what-support"',1)[-1].split('<section class="initiatives"',1)[0]:
+              t=t.replace(marker,wellness,1)
+
+          t=t.replace('A Key Foundation Priority','Department Wellness')
+          t=t.replace('Our Primary Focus','Department Wellness')
+          t=t.replace('Beyond our primary wellness focus, ','')
+
+          p.write_text(t,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Return Wellness to equal footing on homepage'
+          git push
