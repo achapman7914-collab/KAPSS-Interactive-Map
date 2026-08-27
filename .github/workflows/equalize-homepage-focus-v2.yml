@@ -1,0 +1,54 @@
+name: Equalize Homepage Program Focus V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/equalize-homepage-focus-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  equalize-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore equal treatment of support areas
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('foundation-preview/index.html')
+          t = p.read_text(encoding='utf-8')
+
+          # Remove any standalone featured Wellness block.
+          t = re.sub(r'<section class="wellness-feature"[^>]*>.*?</section>', '', t, count=1, flags=re.S)
+
+          equal_support = '''<section class="what-support" id="support"><div class="wrap"><div class="support-head"><div class="support-kicker">What We Support</div><h2>Supporting the Department and Community.</h2><p>The Foundation supports a balanced range of programs and needs that advance the Board-approved mission and strategic pillars. Each area plays an important role in strengthening public safety, officer readiness, wellness and community connection.</p></div><div class="support-grid"><a class="support-card" style="background:linear-gradient(180deg,rgba(4,24,45,.12),rgba(4,24,45,.95)),url('assets/wellness-hero.jpg') center/cover,#0b3153" href="wellness.html"><div class="tag">Department Wellness</div><h3>Officer Wellness</h3><p>Supporting officers’ physical, mental and emotional well-being through programs and resources that promote resilience and sustained performance.</p><span class="learn">Explore Officer Wellness →</span></a><a class="support-card reach-card" href="reach.html"><div class="tag">Community Engagement</div><h3>REACH</h3><p>Helping connect victims, individuals and families with advocacy, recovery resources, mental-health support and practical community services.</p><span class="learn">Explore REACH →</span></a><a class="support-card" href="officer-in-distress.html"><div class="tag">Officer &amp; Family Support</div><h3>Officer in Distress</h3><p>Building a compassionate source of assistance for members of the JPD family facing serious illness, injury, loss or extraordinary hardship.</p><span class="learn">Explore Officer in Distress →</span></a></div><div class="support-cta">Every contribution helps advance the Foundation’s mission.<a href="donate.html">See Ways to Give →</a></div></div></section>'''
+
+          # Replace whatever support section is currently there, preserving Current Initiatives after it.
+          t, n = re.subn(r'<section class="what-support" id="support">.*?</section>(?=<section class="initiatives")', equal_support, t, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit('Could not locate support section safely.')
+
+          # Remove any remaining wording that makes Wellness sound primary.
+          t = t.replace('Beyond our primary wellness focus, ', '')
+          t = t.replace('Our Primary Focus', 'Department Wellness')
+          t = t.replace('A Key Foundation Priority', 'Department Wellness')
+          t = t.replace('primary wellness focus', 'wellness programming')
+
+          p.write_text(t, encoding='utf-8')
+          PY
+      - name: Commit homepage update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add foundation-preview/index.html
+          if git diff --cached --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git commit -m 'Make homepage support areas equal again'
+          git push
