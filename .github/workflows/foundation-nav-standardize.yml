@@ -1,0 +1,76 @@
+name: Standardize Foundation navigation
+on:
+  push:
+    paths:
+      - '.github/workflows/foundation-nav-standardize.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  standardize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply homepage navigation to Foundation pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          pages = [
+            'community-engagement.html','wellness.html','reach.html','officer-in-distress.html',
+            'dfr.html','grappler.html','events.html','leadership.html','donate.html',
+            'programs.html','initiatives.html'
+          ]
+
+          css = r'''
+/* FOUNDATION MASTER NAV */
+.foundation-topline{background:#04172a;color:#fff;font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.foundation-topline .foundation-wrap{height:34px;display:flex;align-items:center;justify-content:space-between}
+.foundation-wrap{width:min(1240px,calc(100% - 52px));margin:auto}
+.foundation-header{background:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(7,26,48,.06);font-family:Inter,Arial,sans-serif}
+.foundation-brand-row{min-height:122px;display:flex;align-items:center}
+.foundation-brand{display:flex;align-items:center;gap:20px;text-decoration:none!important}
+.foundation-brand img{width:100px;height:100px;object-fit:contain!important;clip-path:none!important;transform:none!important;border-radius:0!important}
+.foundation-brand-copy strong{font:900 clamp(28px,2.7vw,44px)/.94 'Libre Franklin',Arial,sans-serif;color:#06182d;text-transform:uppercase;display:block}
+.foundation-brand-copy span{display:block;margin-top:9px;color:#1686c7;font-size:11px;letter-spacing:.20em;font-weight:900;text-transform:uppercase}
+.foundation-nav-wrap{border-top:1px solid #dce4eb}
+.foundation-nav{min-height:58px;display:flex;align-items:center;gap:34px;position:relative;overflow:visible!important}
+.foundation-nav>a,.foundation-dropbtn{text-decoration:none!important;color:#06182d!important;font-size:12px!important;font-weight:900!important;letter-spacing:.045em!important;text-transform:uppercase!important;white-space:nowrap;background:none;border:0;font-family:inherit;cursor:pointer;padding:20px 0!important;margin:0!important}
+.foundation-dropdown{position:relative}
+.foundation-dropbtn{display:flex;align-items:center;gap:7px}
+.foundation-dropbtn:after{content:'▾';font-size:11px;color:#d8a33a}
+.foundation-dropdown-menu{display:none;position:absolute;top:100%;left:-18px;min-width:250px;background:#fff;border-top:3px solid #d8a33a;box-shadow:0 18px 38px rgba(7,26,48,.18);padding:10px 0;z-index:1100}
+.foundation-dropdown:hover .foundation-dropdown-menu,.foundation-dropdown:focus-within .foundation-dropdown-menu{display:block}
+.foundation-dropdown-menu a{display:block;padding:14px 20px!important;color:#06182d!important;text-decoration:none!important;font-size:12px!important;font-weight:800!important;border-bottom:1px solid #edf1f4!important;margin:0!important;text-transform:none!important}
+.foundation-dropdown-menu a:last-child{border-bottom:0!important}
+.foundation-dropdown-menu a:hover{background:#f7f4ed;color:#9b6a09!important}
+.foundation-donate{margin-left:auto!important;background:#06182d!important;color:#fff!important;padding:15px 24px!important;border-radius:3px}
+.foundation-flagline{height:4px;background:linear-gradient(90deg,#a91f2b 0 33.333%,#fff 33.333% 66.666%,#1686c7 66.666%)}
+@media(max-width:700px){.foundation-topline{display:none}.foundation-wrap{width:calc(100% - 34px)}.foundation-brand-row{min-height:100px}.foundation-brand img{width:72px;height:72px}.foundation-brand-copy strong{font-size:24px}.foundation-nav{gap:20px;flex-wrap:wrap}.foundation-dropdown-menu{left:0;min-width:220px}.foundation-donate{margin-left:0!important}}
+'''
+
+          header = '''<div class="foundation-topline"><div class="foundation-wrap"><span>Honor • Service • Community</span><span>Jeffersontown, Kentucky</span></div></div><header class="foundation-header"><div class="foundation-wrap foundation-brand-row"><a class="foundation-brand" href="index.html"><img src="assets/foundaiton%20logo.jpg?v=20260821-brand" alt="Jeffersontown Police Foundation logo"><div class="foundation-brand-copy"><strong>Jeffersontown<br>Police Foundation</strong><span>Supporting Today. Building Tomorrow.</span></div></a></div><div class="foundation-nav-wrap"><nav class="foundation-wrap foundation-nav" aria-label="Main navigation"><a href="index.html">Home</a><div class="foundation-dropdown"><button class="foundation-dropbtn" type="button" aria-haspopup="true">What We Support</button><div class="foundation-dropdown-menu"><a href="wellness.html">Wellness Program</a><a href="community-engagement.html">Community Engagement</a><a href="reach.html">REACH Unit</a><a href="officer-in-distress.html">Officer in Distress</a><a href="dfr.html">DFR Initiative</a><a href="grappler.html">Grappler Initiative</a></div></div><a href="events.html">Upcoming Events</a><a href="leadership.html">Leadership</a><a class="foundation-donate" href="donate.html">Donate</a></nav></div><div class="foundation-flagline"></div></header>'''
+
+          root = Path('foundation-preview')
+          for name in pages:
+              p = root / name
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              if '/* FOUNDATION MASTER NAV */' not in s:
+                  s = s.replace('</style>', css + '</style>', 1)
+              # Replace everything immediately after body through the first header/nav area.
+              if '<header' in s:
+                  s = re.sub(r'(<body[^>]*>).*?</header>', lambda m: m.group(1) + header, s, count=1, flags=re.S)
+              elif re.search(r'<body[^>]*>\s*<nav\b', s, re.S):
+                  s = re.sub(r'(<body[^>]*>)\s*<nav\b.*?</nav>', lambda m: m.group(1) + header, s, count=1, flags=re.S)
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit standardized Foundation navigation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add foundation-preview/*.html
+          git diff --cached --quiet || git commit -m "Use homepage navigation across Foundation pages"
+          git push
