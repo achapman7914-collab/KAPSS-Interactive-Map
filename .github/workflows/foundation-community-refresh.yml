@@ -1,0 +1,73 @@
+name: Refresh foundation community banner
+on:
+  push:
+    paths:
+      - '.github/workflows/foundation-community-refresh.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  refresh-community-banner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make community graphic full bleed
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('foundation-preview/index.html')
+          s = p.read_text()
+          marker = '</style>'
+          css = r'''
+/* Full-bleed community feature refresh */
+.community{
+  background:linear-gradient(135deg,#0a2947 0%,#06182d 100%)!important;
+  padding:0!important;
+  text-align:center!important;
+  overflow:hidden!important;
+  border-top:5px solid var(--blue)!important;
+}
+.community .wrap{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+.community:before{
+  content:'Proudly Jeffersontown'!important;
+  display:block!important;
+  padding:26px 20px 18px!important;
+  margin:0!important;
+  color:var(--gold2)!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  letter-spacing:.20em!important;
+  text-transform:uppercase!important;
+}
+.community img{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  margin:0!important;
+  box-shadow:none!important;
+}
+@media(max-width:700px){
+  .community:before{padding:20px 16px 14px!important;font-size:10px!important}
+}
+'''
+          tag = '/* Full-bleed community feature refresh */'
+          if tag not in s:
+              s = s.replace(marker, css + marker)
+          else:
+              start = s.index(tag)
+              end = s.index(marker, start)
+              s = s[:start] + css + s[end:]
+          p.write_text(s)
+          PY
+      - name: Commit refreshed homepage
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add foundation-preview/index.html
+          git diff --cached --quiet || git commit -m "Make foundation community graphic full bleed"
+          git push
