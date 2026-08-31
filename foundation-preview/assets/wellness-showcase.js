@@ -2,7 +2,7 @@
 const section=document.querySelector('.wellness');if(!section)return;
 const community=document.querySelector('.local-feature');const donate=document.querySelector('.donate');if(community&&donate)donate.parentNode.insertBefore(community,donate);
 const leadership=document.querySelector('#leadership');if(leadership)leadership.remove();
-const nav=document.querySelector('nav');if(nav){nav.innerHTML='<a href="#mission">Mission</a><a href="#pillars">Our Focus</a><a href="wellness.html">Wellness</a><a href="reach.html">REACH</a><a href="dfr.html">DFR Initiative</a><a href="grappler.html">Grappler Initiative</a><a href="events.html">Upcoming Events</a><a href="leadership.html">Leadership</a><a class="donate-link" href="#donate">Donate</a>';}
+const nav=document.querySelector('nav');if(nav){nav.innerHTML='<a href="#mission">Mission</a><a href="#pillars">Our Focus</a><a href="wellness.html">Wellness</a><a href="reach.html">REACH</a><a href="training-equipment.html">Training &amp; Equipment</a><a href="dfr.html">DFR Initiative</a><a href="events.html">Upcoming Events</a><a href="leadership.html">Leadership</a><a class="donate-link" href="#donate">Donate</a>';}
 // Keep the homepage concise; each program and initiative has its own dedicated page.
 const dfr=document.querySelector('#dfr');if(dfr)dfr.remove();
 section.remove();
