@@ -42,6 +42,18 @@
 @media(max-width:900px){.reach-contact-shell{grid-template-columns:1fr}.reach-support-card{padding:30px 34px}.reach-support-card .btn{max-width:260px}}
 @media(max-width:700px){.reach-contact-section{padding:32px 0}.reach-contact-panel,.reach-support-card{padding:25px 22px}.reach-contact-options{grid-template-columns:1fr;padding-top:8px}.reach-contact-option,.reach-contact-option:first-child{padding:14px 0}.reach-contact-option+.reach-contact-option{border-left:0;border-top:1px solid #e3e7ea}}
 
+/* Keep the navy support content broad and compact instead of one tall column. */
+.lower-grid{grid-template-columns:.9fr 1.15fr .8fr;align-items:stretch}
+.support-box{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);padding:24px 28px 28px}
+.support-box h3{grid-column:1/-1;margin-bottom:6px}
+.support-box>p{grid-column:1/-1;max-width:760px;margin:0 0 12px}
+.support-box .need{border-bottom:0;border-left:1px solid rgba(255,255,255,.2);padding:10px 16px}
+.support-box .need:first-of-type{border-left:0;padding-left:0}
+.impact-box,.history-box,.founder-box{min-width:0}
+.founder-photo{min-height:0;aspect-ratio:4/3}
+@media(max-width:1100px){.lower-grid{grid-template-columns:1fr}.support-box{grid-column:auto;grid-template-columns:1fr 1fr}.support-box h3,.support-box>p{grid-column:1/-1}.support-box .need,.support-box .need:first-of-type{border-left:0;border-top:1px solid rgba(255,255,255,.18);padding:14px 16px}.support-box .need:nth-of-type(odd){padding-left:0}.founder-photo{aspect-ratio:16/9}}
+@media(max-width:700px){.support-box{grid-template-columns:1fr;padding:24px 22px}.support-box h3,.support-box>p{grid-column:auto}.support-box .need,.support-box .need:first-of-type,.support-box .need:nth-of-type(odd){padding:14px 0}.founder-photo{aspect-ratio:4/3}}
+
 /* Full-width REACH hero: original photography and original logo, layered in CSS. */
 .hero.reach-banner{position:relative;isolation:isolate;overflow:hidden;min-height:660px;display:flex;align-items:center;background:#031a31;border-bottom:5px solid var(--maroon);color:#fff}
 .reach-banner-photo{position:absolute;z-index:0;top:0;right:0;bottom:0;width:58%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.38) 8%,rgba(0,0,0,.8) 17%,#000 28%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.38) 8%,rgba(0,0,0,.8) 17%,#000 28%)}
