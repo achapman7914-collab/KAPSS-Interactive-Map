@@ -31,17 +31,27 @@ h2{font:800 clamp(34px,4.2vw,56px)/1.08 'Roboto Slab',Georgia,serif;margin:14px 
 @media(max-width:900px){.focus-grid,.ready-grid{grid-template-columns:1fr}.ready-grid{gap:28px}.nav .wrap{flex-wrap:wrap;gap:20px}.header{position:relative}.hero:before{left:25%}.hero:after{background:linear-gradient(90deg,#04172a 0%,rgba(4,23,42,.92) 48%,rgba(4,23,42,.6) 100%)}}
 @media(max-width:700px){.topline{display:none}.wrap{width:calc(100% - 34px)}.brandrow{min-height:100px}.brand{gap:12px}.brand img{width:60px;height:60px;flex-shrink:0}.brand strong{font-size:clamp(19px,5vw,24px)}.brand span{font-size:9px;letter-spacing:.08em}.nav .wrap{gap:16px}.nav .donate{margin-left:0}.dropdown-menu{left:0;min-width:220px}.hero{min-height:520px}.hero-copy{padding:60px 0}.hero h1{font-size:clamp(40px,10vw,52px)}.hero p{font-size:17px}.vision,.focus,.ready,.cta{padding:56px 0}.focus-card{padding:28px}.footer{padding:28px 17px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-/* Training and equipment photo gallery */
-.action-gallery{padding:72px 0;background:var(--cream);border-top:1px solid var(--line)}
-.action-gallery .wrap{max-width:1140px}
-.action-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
-.action-photo{margin:0;min-width:0;background:#fff;border-bottom:3px solid var(--gold);overflow:hidden}
-.action-image{height:210px;display:flex;align-items:center;justify-content:center;background:var(--navy)}
-.action-image img{display:block;width:auto;height:auto;max-width:100%;max-height:210px;object-fit:contain}
-.action-photo figcaption{padding:15px 12px;color:var(--ink);font-size:13px;font-weight:800;line-height:1.5;text-align:center}
-@media(max-width:1000px){.action-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:700px){.action-gallery{padding:56px 0}.action-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.action-image{height:180px}.action-image img{max-height:180px}}
-@media(max-width:360px){.action-grid{grid-template-columns:1fr}}
+/* Training in Action editorial mosaic */
+.action-gallery{padding:82px 0 88px;background:var(--cream);border-top:1px solid #e2ded5;border-bottom:1px solid #e2ded5}
+.action-gallery .wrap{max-width:1240px}
+.action-gallery .section-head{margin-bottom:42px}
+.action-gallery .section-head:after{content:"";display:block;width:64px;height:4px;background:var(--gold);margin:25px auto 0}
+.action-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:190px;grid-auto-flow:dense;gap:16px}
+.action-photo{position:relative;margin:0;min-width:0;overflow:hidden;background:var(--navy);box-shadow:0 12px 28px rgba(4,23,42,.12);isolation:isolate}
+.action-photo:nth-child(1){grid-column:span 2;grid-row:span 2}
+.action-photo:nth-child(4),.action-photo:nth-child(7),.action-photo:nth-child(8){grid-column:span 2}
+.action-image{position:absolute;inset:0;background:var(--navy)}
+.action-image:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,16,31,0) 38%,rgba(3,16,31,.16) 58%,rgba(3,16,31,.92) 100%)}
+.action-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.action-photo:nth-child(1) .action-image img{object-position:center 42%}
+.action-photo:nth-child(4) .action-image img{object-position:center 56%}
+.action-photo:nth-child(5) .action-image img,.action-photo:nth-child(6) .action-image img,.action-photo:nth-child(7) .action-image img,.action-photo:nth-child(8) .action-image img{object-position:center 45%}
+.action-photo figcaption{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:34px 20px 18px;color:#fff;font-size:14px;font-weight:900;line-height:1.3;text-align:left;text-transform:uppercase;letter-spacing:.045em}
+.action-photo figcaption:before{content:"";display:block;width:34px;height:3px;background:var(--gold2);margin-bottom:9px}
+.action-photo:hover .action-image img{transform:scale(1.025)}
+@media(max-width:900px){.action-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}.action-photo:nth-child(4),.action-photo:nth-child(7),.action-photo:nth-child(8){grid-column:span 1}}
+@media(max-width:700px){.action-gallery{padding:58px 0 64px}.action-gallery .section-head{margin-bottom:30px}.action-grid{gap:12px;grid-auto-rows:175px}.action-photo:nth-child(1){grid-row:span 2}.action-photo figcaption{padding:28px 14px 14px;font-size:12px}}
+@media(max-width:520px){.action-grid{grid-template-columns:1fr;grid-auto-rows:220px}.action-photo:nth-child(1),.action-photo:nth-child(4),.action-photo:nth-child(7),.action-photo:nth-child(8){grid-column:span 1;grid-row:span 1}.action-photo figcaption{font-size:13px}}
 </style></head><body><div class="topline"><div class="wrap"><span>Honor • Service • Community</span><span>Jeffersontown, Kentucky</span></div></div><header class="header"><div class="wrap brandrow"><a class="brand" href="index.html"><img src="assets/foundaiton%20logo.jpg?v=20260821-brand" alt="Jeffersontown Police Foundation logo"><div><strong>Jeffersontown<br>Police Foundation</strong><span>Supporting Today. Building Tomorrow.</span></div></a></div><div class="nav"><div class="wrap"><a href="index.html">Home</a><div class="dropdown"><button class="dropbtn" type="button" aria-haspopup="true">What We Support</button><div class="dropdown-menu"><a href="wellness.html">Wellness Program</a><a href="community-engagement.html">Community Engagement</a><a href="reach.html">REACH Unit</a><a href="officer-in-distress.html">Officer in Distress</a><a href="training-equipment.html">Training &amp; Equipment</a><a href="dfr.html">DFR Initiative</a></div></div><a href="events.html">Upcoming Events</a><a href="leadership.html">Leadership</a><a class="donate" href="donate.html">Donate</a></div></div><div class="flagline"></div></header><main>
 <section class="hero"><div class="wrap"><div class="hero-copy"><div class="kicker">Training &amp; Equipment</div><h1>Equipping Today.<br>Preparing for Tomorrow.</h1><p>Supporting the training, modern equipment and innovative technology that help Jeffersontown Police Department personnel serve safely, effectively and with confidence.</p><a class="button" href="#priorities">Explore Our Priorities →</a></div></div></section>
 <section class="vision"><div class="wrap vision-inner"><div class="kicker">Our Vision</div><h2>Innovation Built on Trust.</h2><div class="goldrule"></div><p>The Foundation envisions a future where public safety is driven by innovation, built on trust and strengthened through community collaboration, positioning Jeffersontown as a model of proactive, community-focused policing.</p></div></section>
