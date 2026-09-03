@@ -20,6 +20,12 @@
   .jpf-footer-tax strong{color:#06182d;text-decoration:underline;text-underline-offset:2px}
   .jpf-footer-address strong{color:#06182d}
   .jpf-footer-taxid{font-weight:400;color:#23384c}
+  .jpf-wellness-benefits{gap:0!important;border-top:1px solid rgba(239,182,58,.45)!important;border-bottom:1px solid rgba(239,182,58,.45)!important}
+  .jpf-wellness-benefits .support-icon{min-height:126px!important;padding:18px 14px 16px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+  .jpf-wellness-benefits .support-icon strong{font-size:18px!important;line-height:1.12!important;font-family:'Roboto Slab',Georgia,serif!important;margin-top:7px!important;color:#fff!important;text-transform:none!important}
+  .jpf-wellness-benefits .support-icon span{font-size:13px!important;line-height:1.35!important;margin-top:6px!important;color:#eef4f7!important;max-width:145px!important}
+  .jpf-benefit-svg{width:34px;height:34px;color:#efb63a;display:block;flex:0 0 auto}
+  .jpf-benefit-svg *{vector-effect:non-scaling-stroke}
   @media(max-width:760px){
     .jpf-footer-wrap{width:calc(100% - 34px)}
     .jpf-site-footer{padding:20px 0 18px}
@@ -31,6 +37,9 @@
     .jpf-footer-contact{grid-template-columns:18px 1fr}
     .jpf-home-fade.hero:before{left:10%!important}
     .jpf-home-fade.hero:after{background:linear-gradient(90deg,rgba(3,18,34,.98) 0%,rgba(3,18,34,.9) 45%,rgba(3,18,34,.45) 72%,rgba(3,18,34,.08) 100%)!important}
+    .jpf-wellness-benefits .support-icon{min-height:118px!important}
+    .jpf-wellness-benefits .support-icon strong{font-size:16px!important}
+    .jpf-wellness-benefits .support-icon span{font-size:12px!important}
   }`;
   const s=document.createElement('style');
   s.textContent=css;
@@ -42,6 +51,20 @@
     if(h)h.classList.add('jpf-home-fade');
     const d=document.querySelector('.donate');
     if(d)d.classList.add('jpf-home-clean-cta');
+  }
+
+  if(p.endsWith('/wellness.html')){
+    const benefits=document.querySelector('.support-icons');
+    if(benefits){
+      benefits.classList.add('jpf-wellness-benefits');
+      const icons=[
+        '<svg class="jpf-benefit-svg" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 41S8 31.5 8 18.5C8 11.8 16.2 8.1 24 15c7.8-6.9 16-3.2 16 3.5C40 31.5 24 41 24 41Z" stroke="currentColor" stroke-width="2.7"/><path d="M14 24h7l3-7 4 14 3-7h5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        '<svg class="jpf-benefit-svg" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="18" cy="17" r="6" stroke="currentColor" stroke-width="2.7"/><circle cx="31" cy="18" r="5" stroke="currentColor" stroke-width="2.7"/><path d="M7 38c1-8 5-12 11-12s10 4 11 12M26 29c2-3 5-4 8-3 4 1 6 5 7 11" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>',
+        '<svg class="jpf-benefit-svg" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 5 39 11v11c0 10-6.5 17-15 21-8.5-4-15-11-15-21V11L24 5Z" stroke="currentColor" stroke-width="2.7"/><path d="M18 25l4 4 8-10" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        '<svg class="jpf-benefit-svg" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="m8 21 8-7 7 5-5 5 7 7c2 2 5 2 7 0l8-8M15 34l-6-6 7-7M33 15l6 6" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path d="m20 18 4-4c2-2 5-2 7 0l4 4" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>'
+      ];
+      benefits.querySelectorAll('.support-icon').forEach((el,i)=>{if(!el.querySelector('svg')&&icons[i])el.insertAdjacentHTML('afterbegin',icons[i]);});
+    }
   }
 
   const f=document.querySelector('footer');
