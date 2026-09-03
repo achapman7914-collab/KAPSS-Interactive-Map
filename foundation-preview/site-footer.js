@@ -50,7 +50,7 @@
       <img class="jpf-footer-official-logo" src="assets/foundation-footer-logo.png?v=20260903-whitecompact" alt="Jeffersontown Police Foundation, Inc.">
     </div>
     <nav class="jpf-footer-nav" aria-label="Footer navigation">
-      <a href="index.html">About</a><a href="programs.html">Programs</a><a href="initiatives.html">Initiatives</a><a href="leadership.html">Leadership</a><a href="donate.html">Donate</a>
+      <a href="index.html#about">About</a><a href="index.html#support">Programs</a><a href="index.html#pillars">Our Mission</a><a href="leadership.html">Leadership</a><a href="donate.html">Donate</a>
     </nav>
     <div class="jpf-footer-bottom">
       <div class="jpf-footer-contact">
