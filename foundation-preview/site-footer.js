@@ -2,6 +2,8 @@
   const css=`
   .jpf-home-fade.hero:before{left:28%!important;background-position:62% center!important}
   .jpf-home-fade.hero:after{background:linear-gradient(90deg,#031222 0%,#031222 28%,rgba(3,18,34,.995) 36%,rgba(3,18,34,.97) 44%,rgba(3,18,34,.86) 52%,rgba(3,18,34,.68) 60%,rgba(3,18,34,.47) 68%,rgba(3,18,34,.27) 76%,rgba(3,18,34,.12) 84%,rgba(3,18,34,.04) 91%,rgba(3,18,34,0) 100%)!important}
+  .jpf-home-clean-cta .donate-contact{display:none!important}
+  .jpf-home-clean-cta.donate{padding-top:50px!important;padding-bottom:50px!important}
   .jpf-site-footer{background:#fff;color:#06182d;padding:24px 0 18px;font-family:Inter,Arial,sans-serif;border-top:1px solid #e5e8eb}
   .jpf-site-footer *{box-sizing:border-box}
   .jpf-footer-wrap{width:min(1120px,calc(100% - 48px));margin:auto}
@@ -36,6 +38,8 @@
   if(p.endsWith('/index.html')||p.endsWith('/foundation-preview/')||p.endsWith('/foundation-preview')){
     const h=document.querySelector('.hero');
     if(h)h.classList.add('jpf-home-fade');
+    const d=document.querySelector('.donate');
+    if(d)d.classList.add('jpf-home-clean-cta');
   }
 
   const f=document.querySelector('footer');
