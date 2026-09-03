@@ -11,7 +11,8 @@
   .jpf-footer-official-logo{display:block;width:min(540px,72vw);height:auto;object-fit:contain;image-rendering:auto}
   .jpf-footer-nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;padding:7px 0 15px;border-bottom:1px solid #d8a33a}
   .jpf-footer-nav a{color:#06182d!important;text-decoration:none!important;text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:.04em;padding:3px 23px;border-right:1px solid #d8a33a}
-  .jpf-footer-nav a:last-child{border-right:0;color:#c58b16!important}
+  .jpf-footer-nav a:last-child{border-right:0;background:#06182d;color:#fff!important;padding:10px 22px;margin-left:22px;border-radius:2px}
+  .jpf-footer-support:after{content:' ▾';color:#d8a33a;font-size:9px;margin-left:3px}
   .jpf-footer-bottom{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;padding-top:13px;font-size:12px;line-height:1.45;color:#23384c}
   .jpf-footer-contact{display:grid;grid-template-columns:18px 1fr;column-gap:9px;row-gap:5px}
   .jpf-footer-icon{color:#d8a33a;font-size:14px;line-height:1}
@@ -24,6 +25,7 @@
     .jpf-site-footer{padding:20px 0 18px}
     .jpf-footer-official-logo{width:min(500px,90vw)}
     .jpf-footer-nav a{padding:5px 10px;border-right:0}
+    .jpf-footer-nav a:last-child{margin-left:8px;padding:8px 14px}
     .jpf-footer-bottom{grid-template-columns:1fr;gap:12px}
     .jpf-footer-copy{text-align:left}
     .jpf-footer-contact{grid-template-columns:18px 1fr}
@@ -50,7 +52,7 @@
       <img class="jpf-footer-official-logo" src="assets/foundation-footer-logo.png?v=20260903-whitecompact" alt="Jeffersontown Police Foundation, Inc.">
     </div>
     <nav class="jpf-footer-nav" aria-label="Footer navigation">
-      <a href="index.html#about">About</a><a href="index.html#support">Programs</a><a href="index.html#pillars">Our Mission</a><a href="leadership.html">Leadership</a><a href="donate.html">Donate</a>
+      <a href="index.html">Home</a><a class="jpf-footer-support" href="index.html#support">What We Support</a><a href="index.html#events">Upcoming Events</a><a href="leadership.html">Leadership</a><a href="donate.html">Donate</a>
     </nav>
     <div class="jpf-footer-bottom">
       <div class="jpf-footer-contact">
