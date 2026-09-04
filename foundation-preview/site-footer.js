@@ -1,6 +1,6 @@
 (()=>{
   const css=`
-  .jpf-home-fade.hero:before{left:28%!important;background-image:url('assets/police-car-blue-lights.png')!important;background-position:62% center!important;background-size:cover!important;background-repeat:no-repeat!important}
+  .jpf-home-fade.hero:before{left:28%!important;background-position:62% center!important}
   .jpf-home-fade.hero:after{background:linear-gradient(90deg,#031222 0%,#031222 28%,rgba(3,18,34,.995) 36%,rgba(3,18,34,.97) 44%,rgba(3,18,34,.86) 52%,rgba(3,18,34,.68) 60%,rgba(3,18,34,.47) 68%,rgba(3,18,34,.27) 76%,rgba(3,18,34,.12) 84%,rgba(3,18,34,.04) 91%,rgba(3,18,34,0) 100%)!important}
   .jpf-home-clean-cta .donate-contact{display:none!important}.jpf-home-clean-cta.donate{padding-top:50px!important;padding-bottom:50px!important}
   .jpf-training-blue-car{background:#000 url('assets/police-car-blue-lights.png?v=20260903-blue') center center/cover no-repeat!important}
